@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#8b4513">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <title>Palta Practice Challenge v1.15 - Hindustani Voice Trainer</title>
+  <style>
+    /* Palta Practice - Utpal Chattopadhyay (c) 2026. Change history is kept in app.js. */
+    :root {
+      --bg-cream: #faf7f2;
+      --card-bg: #ffffff;
+      --border-soft: #e7dfd5;
+      --border-accent: #cfa878;
+      --primary-brown: #4a2810;
+      --text-brown: #3b2718;
+      --text-muted: #7d6b5d;
+      --btn-brown: #8b4513;
+      --btn-brown-hover: #6f370f;
+      --btn-green: #2d6a4f;
+      --btn-green-hover: #1b4332;
+      --btn-stop: #9e2a2b;
+      --btn-stop-hover: #781d1e;
+      --highlight-gold: #fbf3e4;
+      --pill-active: #8b4513;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-cream);
+      color: var(--text-brown);
+      margin: 0;
+      padding: 24px 14px 40px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 820px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border-soft);
+      padding-bottom: 12px;
+    }
+
+    .badge-sub {
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #7b4317;
+      background: #faeedd;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid #ebd0b0;
+    }
+
+    .btn-download {
+      background: var(--primary-brown);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+    .btn-download:hover { background: #331b0a; }
+
+    header {
+      text-align: center;
+    }
+    header h1 {
+      margin: 4px 0 6px 0;
+      color: var(--primary-brown);
+      font-size: 1.95rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+    header p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-soft);
+      border-radius: 14px;
+      padding: 20px 24px;
+      box-shadow: 0 4px 18px rgba(74, 40, 16, 0.035);
+    }
+
+    .card-title {
+      font-size: 0.84rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--primary-brown);
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #f2ece3;
+      padding-bottom: 8px;
+    }
+
+    .grid-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    select, input[type="range"] {
+      background: #fff;
+      border: 1px solid var(--border-soft);
+      padding: 9px 11px;
+      border-radius: 8px;
+      color: var(--text-brown);
+      font-size: 0.92rem;
+      font-weight: 600;
+      outline: none;
+      transition: border 0.15s;
+    }
+
+    select:focus {
+      border-color: var(--btn-brown);
+    }
+
+    .tanpura-ctrl-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border-soft);
+    }
+
+    .btn-tanpura-toggle {
+      background-color: var(--btn-green);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.15s;
+    }
+    .btn-tanpura-toggle:hover {
+      background-color: var(--btn-green-hover);
+    }
+    .btn-tanpura-toggle.active {
+      background-color: #8c2d19;
+    }
+
+    .tanpura-status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    /* v1.11: one-shot Aroha/Avaroha scale buttons, ported concept from Swara Ear
+       Trainer's playAroh/playAvroh (two independent buttons, not one combined
+       auto-chain button). Styled as a secondary action, distinct from the main
+       green Tanpura loop toggle. */
+    .btn-scale {
+      background-color: var(--btn-brown);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-scale:hover:not(:disabled) {
+      background-color: var(--btn-brown-hover);
+    }
+    .btn-scale:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ccc;
+      display: inline-block;
+    }
+    .status-dot.active {
+      background: #2ecc71;
+      box-shadow: 0 0 8px rgba(46, 204, 113, 0.7);
+    }
+
+    .phase-badge {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+    .phase-listen {
+      background: #e8f5e9;
+      color: #246328;
+      border: 1px solid #b7e1be;
+    }
+    .phase-sing {
+      background: #fff3e0;
+      color: #c04600;
+      border: 1px solid #ffd099;
+      animation: pulse-border 1.5s infinite;
+    }
+    .phase-idle {
+      background: #f1ede7;
+      color: #796657;
+      border: 1px solid #e0d6cb;
+    }
+
+    @keyframes pulse-border {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    .unit-hero {
+      background: linear-gradient(180deg, #fffcf7 0%, var(--highlight-gold) 100%);
+      border: 2px dashed var(--border-accent);
+      border-radius: 14px;
+      padding: 24px 16px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .unit-hero-tag {
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #8c531d;
+      margin-bottom: 6px;
+    }
+
+    .unit-text-main {
+      font-size: 2.7rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      color: var(--primary-brown);
+      margin: 0;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .unit-sub-info {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      font-weight: 600;
+    }
+
+    .dadra-strip {
+      background: #fdfbf7;
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 18px;
+    }
+
+    .dadra-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--primary-brown);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .matra-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+    }
+
+    .matra-cell {
+      background: #fff;
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
+      padding: 6px 2px;
+      text-align: center;
+      transition: all 0.1s ease;
+    }
+
+    .matra-num {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .matra-cell.sam { border-top: 3px solid #8b4513; }
+    .matra-cell.khali { border-top: 3px solid #6b7280; }
+
+    .matra-cell.active {
+      background: var(--btn-green);
+      border-color: var(--btn-green);
+      transform: translateY(-2px);
+    }
+    .matra-cell.active .matra-num {
+      color: #ffffff;
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin: 18px 0 20px 0;
+    }
+
+    button.action-btn {
+      padding: 11px 22px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      border-radius: 9px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      transition: all 0.15s ease-in-out;
+    }
+
+    .btn-gen { background: var(--btn-brown); color: #fff; }
+    .btn-gen:hover { background: var(--btn-brown-hover); }
+
+    .btn-replay { background: #f7efe6; color: var(--primary-brown); border: 1px solid #d9c4b1; }
+    .btn-replay:hover { background: #ede2d5; }
+
+    .btn-halt { background: var(--btn-stop); color: #fff; }
+    .btn-halt:hover { background: var(--btn-stop-hover); }
+
+    button.action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .progression-section {
+      background: #faf6f0;
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .progression-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      cursor: pointer;
+      user-select: none;
+      background: #f6efe4;
+      border-bottom: 1px solid transparent;
+      transition: background 0.15s;
+    }
+    .progression-header:hover { background: #ede3d3; }
+    .progression-header.expanded { border-bottom-color: var(--border-soft); }
+
+    /* v1.13: small muted hint shown alongside "Hide" once the panel is expanded,
+       teaching the option to re-collapse it right when it's relevant. Deliberately
+       NOT shown on the "Show" (collapsed) state - see toggle JS below. */
+    .recommended-hint {
+      font-size: 0.68rem;
+      font-style: italic;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .progression-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary-brown);
+    }
+
+    .toggle-icon {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary-brown);
+    }
+
+    .progression-body {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .progression-body.hidden { display: none; }
+
+    .stage-label {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    .pills-flow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .unit-pill {
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: #ffffff;
+      border: 1px solid #ded3c5;
+      color: var(--text-brown);
+      transition: all 0.15s;
+    }
+    .unit-pill.active {
+      background: var(--pill-active);
+      color: #fff;
+      border-color: var(--pill-active);
+      font-weight: 700;
+      transform: scale(1.05);
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+
+    <div class="top-bar">
+      <span class="badge-sub">Hindustani Classical Voice Riyaz</span>
+    </div>
+
+    <header>
+      <h1>Palta Practice</h1>
+      <p>Hindustani Classical Vocal Training with Tanpura Drone &amp; Taal Practice</p>
+    </header>
+
+    <div class="card">
+      <div class="card-title">
+        <span>Tonic &amp; Tanpura Controls</span>
+        <span style="font-size:0.75rem; color:#8c4a1b; text-transform:none; font-weight:600;">Bound: Mandra Pa (P̣) to Taar Ma (Ṁ)</span>
+      </div>
+
+      <div class="grid-controls">
+        <div class="form-group">
+          <label for="timbreSelect">Acoustic</label>
+          <!-- v1.4: options replaced. These three now match the engine names used in
+               Swara Ear Trainer's playMasterStroke() router, rather than the old
+               harmonium/bansuri/piano labels (see CHANGELOG v1.4 below).
+               v1.13: label shortened "Acoustic Timbre" -> "Acoustic"; option text
+               trimmed (Trim B) - "Harmonium (Reed)" -> "Harmonium", "Studio (Sampled
+               Tanpura)" -> "Studio (Sampled)", "Dual Resonator (Formant)" -> "Dual
+               Resonator". Option VALUES (reed/sampled/formant) are unchanged - only
+               display text changed, so playSwaraTone()/playSwaraEngine()'s routing
+               is unaffected. -->
+          <select id="timbreSelect">
+            <option value="reed" selected="">Harmonium</option>
+            <option value="sampled">Studio (Sampled)</option>
+            <option value="formant">Dual Resonator</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="tonicSelect">Tonic (Sa)</label>
+          <select id="tonicSelect">
+            <option value="A#" selected="">A# (~116.5 / 233.1 Hz)</option>
+            <option value="B">B (~123.5 / 246.9 Hz)</option>
+            <option value="C">C (~130.8 / 261.6 Hz)</option>
+            <option value="C#">C# (~138.6 / 277.2 Hz)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="thaatSelect">Thaat</label>
+          <select id="thaatSelect">
+            <option value="Bilawal" selected="">Bilawal (All Shuddha)</option>
+            <option value="Kalyan">Kalyan (Teevra Ma)</option>
+            <option value="Kafi">Kafi (komal ga, ni)</option>
+            <option value="Bhairav">Bhairav (komal re, dha)</option>
+            <option value="Khamaj">Khamaj (komal ni)</option>
+            <option value="Asavari">Asavari (komal ga, dha, ni)</option>
+            <!-- v1.13: shortened, mirroring "Bilawal (All Shuddha)" - Bhairavi is its
+                 all-komal counterpart (Re/Ga/Dha/Ni all komal, Ma stays shuddha). -->
+            <option value="Bhairavi">Bhairavi (All komal)</option>
+            <!-- v1.13: shortened - groups the three komal notes under one "k." instead
+                 of repeating it three times ("k. re, k. ga, t. ma, k. dha" -> "k. re ga
+                 dha, T. Ma"). Same four modified notes (komal Re/Ga/Dha, teevra Ma). -->
+            <option value="Todi">Todi (k. re ga dha, T. Ma)</option>
+            <!-- v1.14: added Purvi and Marwa, ported from Swara Ear Trainer (which has
+                 these plus the 8 above). Both share komal Re + teevra Ma; Purvi adds
+                 komal Dha (Marwa keeps Dha shuddha) - same compact "k./T." convention
+                 as Todi/Bhairavi above. -->
+            <option value="Purvi">Purvi (k. re dha, T. Ma)</option>
+            <option value="Marwa">Marwa (k. re, T. Ma)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="tanpuraPatternSelect">Tanpura</label>
+          <!-- v1.7: replaced the old 3-option Pa/Ma/Ni-Sa-Sa-Sa dropdown (this app's own
+               invention) with the two patterns from Swara Ear Trainer's loopPatternSelect,
+               same wording and same fixed semitone offsets (0/7/12 from tonic).
+               v1.11: default changed from 3-Stroke to 4-Stroke per Utpal's request. -->
+          <select id="tanpuraPatternSelect">
+            <option value="pattern3">3-Stroke (Sa - Pa - Sa+)</option>
+            <option value="pattern4" selected="">4-Stroke (Pa - Sa+ - Sa+ - Sa)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Tanpura Loop Trigger & Volume Row -->
+      <div class="tanpura-ctrl-row">
+        <button id="btnTanpuraToggle" class="btn-tanpura-toggle">
+          <span id="tanpuraIcon">▶</span>
+          <span id="tanpuraBtnText">Start Tanpura Loop</span>
+        </button>
+
+        <!-- v1.8: Tanpura Drone Volume slider removed. It never actually worked (v1.7
+             routing bug - see playSwaraEngine above), and per Utpal's decision the drone
+             no longer has a user-facing volume control at all; it plays at a fixed, quiet
+             internal level near the low end of the Riyaz Palta Tone Volume range instead. -->
+
+        <div class="tanpura-status-indicator">
+          <span id="tanpuraDot" class="status-dot"></span>
+          <span id="tanpuraStatusText">Drone Idle</span>
+        </div>
+      </div>
+
+      <!-- v1.11: one-shot Aroha/Avaroha, ported from Swara Ear Trainer's playAroh/
+           playAvroh - a plain full-octave scale (Sa to Sa+) built fresh from the
+           currently selected Thaat, NOT the Palta pattern-formula unit shape. Two
+           independent buttons, matching the source app exactly. Plays through the
+           same tanpuraMasterGain/TANPURA_FIXED_GAIN and DRONE_BPM-derived spacing as
+           the drone (not Ear Trainer's own 0.85s/0.95s timing, and not the Riyaz
+           Laya/Palta Tone Volume). Mutually exclusive with the Tanpura loop - see
+           playScaleSequence(), startTanpuraLoop(), stopTanpuraLoop() below. -->
+      <div class="tanpura-ctrl-row">
+        <button id="btnPlayAroha" class="btn-scale">▲ Play Aroha</button>
+        <button id="btnPlayAvaroha" class="btn-scale">▼ Play Avaroha</button>
+      </div>
+    </div>
+
+    <div class="card" style="text-align: center;">
+      <div class="card-title">
+        <span>Practice Studio (Call &amp; Response)</span>
+        <span id="currentFormulaName" style="font-size:0.75rem; color:#8c4a1b; text-transform:none; font-weight:700;">Dynamic Pattern: [ 0, 1, 2, 1, 0 ]</span>
+      </div>
+
+      <div class="grid-controls" style="margin-bottom: 16px; text-align: left;">
+        <div class="form-group">
+          <label for="patternSelect">Palta Pattern</label>
+          <select id="patternSelect">
+            <option value="dynamic_random" selected="">🎲 Dynamic Random Pattern</option>
+            <option value="step_return_3">Step-Return [S - R - S]</option>
+            <option value="skip_return_3">Skip-Return [S - G - S]</option>
+            <option value="leap_return_3">Leap-Return [S - M - S]</option>
+            <option value="arch_5">5-Note Arch [S - R - G - R - S]</option>
+            <option value="skip_arch_5">5-Note Skip Arch [S - G - R - G - S]</option>
+            <option value="lower_touch_5">Lower-Touch [S - Ṇ - S - R - S]</option>
+            <option value="wave_6">6-Note Wave [S - R - G - M - G - S]</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="tempoSelect">Laya (Tempo)</label>
+          <select id="tempoSelect">
+            <option value="80">80 BPM</option>
+            <option value="90">90 BPM</option>
+            <option value="100" selected="">100 BPM</option>
+            <option value="110">110 BPM</option>
+            <option value="120">120 BPM</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="paltaVolSlider">Palta Tone Volume</label>
+          <!-- v1.8: range narrowed from 0-1 to 0.33-1. The bottom third of the old range
+               was not perceptibly useful; the full slider travel now maps to an audible
+               range. Default value unchanged at 0.8, which still falls inside the new range. -->
+          <input type="range" id="paltaVolSlider" min="0.33" max="1" step="0.05" value="0.8">
+        </div>
+
+        <div class="form-group">
+          <label for="beatStyleSelect">Beat Click Style</label>
+          <!-- v1.10: new selector. Both options keep the same 3+3 (6-matra) timing
+               structure - this is a choice of CLICK SOUND only, not a different taal.
+               Deliberately named "Beat Click Style" rather than "Taal", so a real future
+               Taal selector (e.g. adding Kaharba's 8-matra/4+4 structure) won't collide
+               with or need to repurpose this control. See playDadraBeat() for the two
+               sound definitions. -->
+          <select id="beatStyleSelect">
+            <option value="flat">3+3 - Flat Metronome</option>
+            <option value="dadra" selected="">3+3 - Dadra Feel</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="statusBadge" class="phase-badge phase-idle">Ready to practice</div>
+
+      <!-- Live Active Chunk Display -->
+      <div class="unit-hero">
+        <div id="unitCategoryNotice" class="unit-hero-tag">Aroha • Unit 1 of 15</div>
+        <h2 id="activeChunkText" class="unit-text-main">S R G R S</h2>
+        <div id="unitAuxInfo" class="unit-sub-info">Ready to play! Click "Generate Challenge" or "Replay"</div>
+      </div>
+
+      <!-- v1.10: 6-Beat Tracker. Header text "Taal Dadra (6 Matras: 3+3)" and the bol
+           names (Dha/Dhin/Na/Tin) shown per-cell are removed - the strip now just shows
+           plain beat numbers 1-6, generic across both Beat Click Style options. The
+           "sam"/"khali" CSS classes on cells 0 and 3 are kept: they only drive the visual
+           3+3 grouping (a border/background cue), not any text, and that grouping is true
+           of both Beat Click Style options, not just "Dadra Feel". Internal identifiers
+           (dadra-strip, matra-*, currentDadraMatra, playDadraBeat, updateDadraMeter) keep
+           their existing names for this six-beat mechanism; only user-facing text changed. -->
+      <div class="dadra-strip">
+        <div class="dadra-meta">
+          <span id="bolText">Beat 1 of 6</span>
+        </div>
+        <div class="matra-grid">
+          <div class="matra-cell sam" id="matra-0">
+            <div class="matra-num">1</div>
+          </div>
+          <div class="matra-cell" id="matra-1">
+            <div class="matra-num">2</div>
+          </div>
+          <div class="matra-cell" id="matra-2">
+            <div class="matra-num">3</div>
+          </div>
+          <div class="matra-cell khali" id="matra-3">
+            <div class="matra-num">4</div>
+          </div>
+          <div class="matra-cell" id="matra-4">
+            <div class="matra-num">5</div>
+          </div>
+          <div class="matra-cell" id="matra-5">
+            <div class="matra-num">6</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-row">
+        <button id="btnGenerate" class="action-btn btn-gen">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+          Generate Challenge
+        </button>
+        <button id="btnReplay" class="action-btn btn-replay">
+          <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M1 4v6h6m-3.5 10a9 9 0 102.13-9.36L3.5 10"></path></svg>
+          Replay Current
+        </button>
+        <button id="btnStop" class="action-btn btn-halt" disabled="">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 20 20"><rect x="5" y="5" width="10" height="10" rx="1.5"></rect></svg>
+          Stop Challenge
+        </button>
+      </div>
+
+      <!-- Collapsible Full Sequence Preview -->
+      <!-- v1.13: defaults to collapsed (was expanded). This also fixes a mobile bug:
+           highlightActivePill()'s scrollIntoView() call is a no-op on a display:none
+           panel, so leaving this collapsed prevents the page from auto-scrolling down
+           during Aroha/Avaroha playback and hiding the single-unit display above it.
+           If someone taps "Show" to expand it, the same scroll-jump can return during
+           playback - the "(recommended)" hint on "Hide" (see JS below) exists to teach
+           that trade-off right when it matters. -->
+      <div class="progression-section">
+        <div class="progression-header" id="toggleProgressionHeader">
+          <span class="progression-title">Full Palta Progression Structure</span>
+          <span class="toggle-icon" id="toggleIcon">[ Show ]</span>
+        </div>
+        <div class="progression-body hidden" id="progressionBody">
+          <div>
+            <div class="stage-label">Aroha (Ascending to peak unit at Upper Sa Ṡ)</div>
+            <div class="pills-flow" id="arohaPillsContainer"><span class="unit-pill" id="pill-unit-0">S R G R S</span><span class="unit-pill" id="pill-unit-1">R G m G R</span><span class="unit-pill" id="pill-unit-2">G m P m G</span><span class="unit-pill" id="pill-unit-3">m P D P m</span><span class="unit-pill" id="pill-unit-4">P D N D P</span><span class="unit-pill" id="pill-unit-5">D N Ṡ N D</span><span class="unit-pill" id="pill-unit-6">N Ṡ Ṙ Ṡ N</span><span class="unit-pill" id="pill-unit-7">Ṡ Ṙ Ġ Ṙ Ṡ</span></div>
+          </div>
+          <div>
+            <div class="stage-label">Avaroha (Descending mirror to Middle Sa S)</div>
+            <div class="pills-flow" id="avarohaPillsContainer"><span class="unit-pill" id="pill-unit-8">N Ṡ Ṙ Ṡ N</span><span class="unit-pill" id="pill-unit-9">D N Ṡ N D</span><span class="unit-pill" id="pill-unit-10">P D N D P</span><span class="unit-pill" id="pill-unit-11">m P D P m</span><span class="unit-pill" id="pill-unit-12">G m P m G</span><span class="unit-pill" id="pill-unit-13">R G m G R</span><span class="unit-pill" id="pill-unit-14">S R G R S</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      © 2026 Utpal Chattopadhyay. All rights reserved. • Palta Practice Challenge v1.15<br>
+      <span style="font-size:0.72rem;">v1.2 built with Gemini • v1.2.1–v1.15 built with Claude</span>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // Offline support / installable app. Needs https (GitHub Pages) - does nothing from file://
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./sw.js').catch(function (err) {
+          console.warn('Service worker registration failed:', err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>

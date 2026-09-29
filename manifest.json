@@ -1,0 +1,25 @@
+{
+  "name": "Palta Practice Challenge",
+  "short_name": "Palta",
+  "description": "Thaat-based Palta Practice of varying lengths",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "scope": "./",
+  "background_color": "#faf8f5",
+  "theme_color": "#8b4513",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
