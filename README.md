@@ -4,9 +4,9 @@ An offline-first Progressive Web App (PWA) that helps learners of Hindustani Cla
 
 **Live App:** [https://utpalch-math.github.io/palta-practice/](https://utpalch-math.github.io/palta-practice/)
 
-**Video Demo:** [Watch on YouTube](https://www.youtube.com/watch?v=aT9FvkzfY3A)
+**Video Demo:** https://www.youtube.com/watch?v=1vmYqv-ocKk
 
----
+\---
 
 ### Purpose
 
@@ -14,9 +14,9 @@ In Indian classical music, a palta (also often called an alankar) is a structure
 
 For vocal training, regular palta practice builds precise intonation (swara-sthana), sharpens pitch agility and breath control, and develops the vocal flexibility needed for rapid taans and intricate improvisation. This app helps a beginning learner train their voice by listening to, and then singing along with, paltas in any of the 10 standard thaats, at any of four selectable pitches.
 
----
+\---
 
-### Features & How to Use
+### Features \& How to Use
 
 **Note:** On a phone, the setup controls fill the first screen. Scroll down to find the Palta Practice section below them.
 
@@ -45,7 +45,7 @@ For vocal training, regular palta practice builds precise intonation (swara-stha
    * As the palta plays, its notes are highlighted on screen. The **Full Palta Progression Structure** panel below shows the complete progression; toggle it with **Show** / **Hide**. It starts hidden, and keeping it hidden is recommended while you practise.
    * The tanpura can play along with the palta. A suggested routine: listen to the tanpura for a minute or so to set your ear to the pitch, then stop it and begin your palta riyaz.
 
----
+\---
 
 ### Installation (Runs Offline)
 
@@ -54,7 +54,7 @@ For vocal training, regular palta practice builds precise intonation (swara-stha
 
 Once loaded, the app needs no app store, takes up very little storage, and runs completely offline.
 
----
+\---
 
 ### বাংলায়: Palta Practice ব্যবহার করার সহজ উপায়
 
@@ -79,7 +79,7 @@ Once loaded, the app needs no app store, takes up very little storage, and runs 
 
 এই হলো মোদ্দা কথা। আশা করি আপনার রেওয়াজে কাজে লাগবে।
 
----
+\---
 
 © 2026 Utpal Chattopadhyay. All rights reserved.  
 Built with the help of Gemini (v1.2) and Claude (v1.2.1–v1.15).
